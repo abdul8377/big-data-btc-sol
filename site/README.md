@@ -1,49 +1,21 @@
-# Sitio académico CryptoPulse
+# Documentación pública de CryptoPulse
 
-Documentación MkDocs Material separada del código y los informes existentes.
+MkDocs Material publica el producto local hasta S12 y su correspondencia con la plantilla U2. GitHub Pages aloja documentación; los servicios de datos se ejecutan en Docker local.
 
-## Vista previa en Windows
+## Validación y vista previa
 
-Desde la raíz del repositorio:
-
-~~~powershell
+```powershell
 py -m pip install -r site/requirements.txt
+py -m mkdocs build --strict -f site/mkdocs.yml
 py -m mkdocs serve -f site/mkdocs.yml
-~~~
+```
 
-Visita http://127.0.0.1:8000/big-data-btc-sol/ o la dirección que indique la terminal.
+El workflow `.github/workflows/cryptopulse-docs.yml` compila y publica al cambiar `site/**` en main. La navegación se define en `site/mkdocs.yml`.
 
-## Publicación
+## Evidencias
 
-1. Fusiona la rama de documentación con main.
-2. Abre Settings > Pages en GitHub.
-3. Selecciona Source: GitHub Actions.
-4. Ejecuta el workflow «CryptoPulse · Documentación MkDocs» si no inició automáticamente.
-5. El sitio esperado será https://abdul8377.github.io/big-data-btc-sol/.
+`docs/assets/images` contiene diagramas técnicos SVG. `docs/assets/downloads` conserva resultados estructurados fechados. `resources/informe-integral-cryptopulse.md` es la copia pública del informe, con accesos locales retirados.
 
-No se publica Grafana localhost ni información de acceso. El sitio es estático.
+Al añadir capturas reales, guardar fecha, herramienta, condiciones y qué se puede concluir en `evidencias.md`. Distinguir una ejecución guardada de un estado actual. Los diagramas no se presentan como capturas de herramientas.
 
-## Sustituir espacios para imágenes
-
-Cada recuadro tiene un código único como U2-08. Busca el código en site/docs/.
-Coloca tu captura en site/docs/assets/evidencias/ (crea la carpeta si aún no existe),
-y reemplaza el bloque <div class="evidence-slot"> correspondiente por:
-
-~~~markdown
-![U2-08 · Captura de procesamiento streaming](assets/evidencias/u2-08-streaming.png)
-*Figura U2-08. Descripción de lo que muestra la captura.*
-~~~
-
-Conserva el nombre, la descripción, el contexto y el vínculo al código que sustenta
-la captura. No reutilices una sola captura como prueba de varias capacidades si no demuestra cada una.
-
-## Alcance y veracidad
-
-Los textos están elaborados a partir de README.md, docs/PRODUCTO_FINAL.md,
-docs/INFORME_SESIONES_S01_S12.md y módulos del repositorio.
-Las verificaciones y números publicados describen el estado documentado del repositorio,
-no el estado en vivo de tu ordenador. Las rúbricas muestran criterios sin notas inventadas.
-
-La S07 utiliza datos continuos del mercado como análogo de telemetría y NO
-demuestra por sí sola que haya un dispositivo IoT físico. Revisa con el docente
-si esta adaptación es aceptada para su criterio específico.
+La implementación adapta la fuente de sensores a telemetría real de mercado conforme al brief. La equivalencia académica y la sustentación individual corresponden al docente.

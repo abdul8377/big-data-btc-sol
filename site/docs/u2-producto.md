@@ -1,190 +1,91 @@
-# Producto · Unidad II
+# Producto de Unidad 2 · CryptoPulse
 
-<span class="cp-tag">S06–S12 · Kafka · Streaming · Observabilidad · Serving</span>
+<span class="cp-tag">S06–S12 · Ingesta · Streaming · Observabilidad · Inferencia · BI</span>
 
-## 1. Resultado integrado
+## Producto
 
-La Unidad II añade una capa de velocidad a CryptoPulse: captura de velas cerradas por activo, distribución a Kafka, procesamiento con estado en Spark, inferencia con modelos del batch y publicación de resultados en PostgreSQL y Grafana.
+CryptoPulse integra eventos reales de BTCUSDT y SOLUSDT en Binance Spot, Kafka, Spark Structured Streaming, PostgreSQL, Prometheus y Grafana. Reutiliza modelos entrenados en batch para actualizar siete series predictivas y catorce evaluaciones explicadas tras las velas cerradas.
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-01</span>
-<h4>Producto final · Pantalla principal</h4>
-<p>Captura de Grafana que muestre estado 7/7, información actual de BTC y SOL y organización del tablero.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-01.png</code></span>
-</div>
+El resultado permite seguir volatilidad, caídas, actividad inusual y divergencia; comprueba frescura/continuidad antes de interpretar señales. No ejecuta órdenes. El pronóstico de divergencia desplegado es la referencia cero porque el candidato no ganó en validación.
 
-## 2. Capacidades y correspondencia con las sesiones
+![Producto U2 y su relación con el batch](assets/images/arquitectura.svg)
 
-| Sesión | Competencia aplicada a CryptoPulse | Soporte versionado |
+*La capa de velocidad reutiliza modelos del histórico y converge en la base de servicio.*
+
+## 1. Alcance de capacidades por sesión
+
+| Sesión | Capacidad implementada | Cómo comprobarla |
 |---|---|---|
-| S06 | Contrato de eventos y publicación/consumo Kafka | [contract.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/contract.py), [schema](https://github.com/abdul8377/big-data-btc-sol/blob/main/schemas/market-kline-v1.schema.json) |
-| S07 | Fuente de telemetría continua: mercado Binance | [producer.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/producer.py) |
-| S08 | Ventanas, watermark, deduplicación, checkpoint | [stream.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/stream.py) |
-| S09 | Observabilidad, alertas y costos orientativos | [exporter.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/exporter.py), [alerts.yml](https://github.com/abdul8377/big-data-btc-sol/blob/main/observability/alerts.yml) |
-| S10 | Inferencia y evaluación diferida | [inference.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/inference.py) |
-| S11 | KPIs y paneles de decisión | [Dashboard JSON](https://github.com/abdul8377/big-data-btc-sol/blob/main/observability/grafana/dashboards/cryptopulse.json) |
-| S12 | Integración, recuperación, validaciones | [integration.py](https://github.com/abdul8377/big-data-btc-sol/blob/main/pyspark/sesiones/cryptopulse/integration.py) |
+| S06 | Eventos de mercado bajo contrato v1, publicación confirmada y lectura Kafka | Esquema, topics por activo y prueba `verify 6` con partición/offset |
+| S07 | Telemetría de mercado por WebSocket; reconciliación REST independiente | Velas cerradas, transporte/mode, heartbeat y continuidad por activo |
+| S08 | Tres consultas: archivo, ventana fija y deslizante | Watermark 2 min; ventanas 5 min / paso 1 min; checkpoints separados |
+| S09 | Métricas y reglas operativas; costo configurable | 21 familias propias, tres targets y ocho reglas; escenario USD 65,15/mes |
+| S10 | Modelos persistidos aplicados a nuevos cierres | Siete series, versión/ancla/horizonte y verdad futura al madurar |
+| S11 | KPIs y predicciones en un único Grafana | 23 paneles de datos, 14 filas de evaluación e historial de cruces |
+| S12 | Integración, recuperación e idempotencia | Evidencia versionada, duplicado contado una vez, watermark y reinicio |
 
-!!! note "Adaptación del caso de telemetría"
-    S07 utiliza eventos reales del mercado como flujo análogo de telemetría. No se presenta como la conexión de un ESP32 o un sensor IoT físico. La equivalencia académica debe confirmarse con el docente si el criterio exige hardware.
+### S06 · Eventos y contrato
 
-### S06 · Kafka y contrato
+`market.klines.btcusdt` y `market.klines.solusdt` reciben objetos con identidad `symbol:1m:open_ms`, OHLC, actividad, cierre, origen y versión. Se publican con clave por símbolo, idempotencia Kafka y confirmación antes de avanzar el cursor REST. Cada topic tiene tres particiones y replicación 1.
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-02</span>
-<h4>Topics Kafka</h4>
-<p>Kafka UI mostrando topics de BTC y SOL, particiones y mensajes.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-02.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-03</span>
-<h4>Evento bajo contrato</h4>
-<p>Payload de vela cerrada con símbolo, temporalidad, timestamps, valores OHLC y versión del esquema.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-03.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-04</span>
-<h4>Publicación y consumo</h4>
-<p>Evidencia de productor y consumidor con recepción de mensajes reales en Kafka.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-04.png</code></span>
-</div>
+El archivo valida rangos, tipos, OHLC y tiempo. Los rechazos Kafka se conservan en PostgreSQL; `market.deadletter` existe, pero no recibe automáticamente esos rechazos. Las claves SQL evitan duplicar velas/predicciones bajo reintentos. [Contrato e ingesta en detalle](pipeline.md).
 
-### S07 · Ingesta continua
+### S07 · Fuente de telemetría del brief
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-05</span>
-<h4>Conexión Binance WebSocket</h4>
-<p>Registro del productor suscrito a BTCUSDT y SOLUSDT kline_1m y recepción de cierres.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-05.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-06</span>
-<h4>Reconciliación REST</h4>
-<p>Log o prueba que demuestre la recuperación de una vela faltante y control contra duplicados.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-06.png</code></span>
-</div>
+La conexión pública combinada recibe `btcusdt@kline_1m` y `solusdt@kline_1m`. Solo `k.x=true` entra al análisis. REST consulta `/api/v3/time` y `/api/v3/klines`, revisita tres horas y recupera minutos intermedios aunque ya haya llegado un cierre posterior. No necesita claves privadas Binance.
 
-### S08 · Streaming con estado
+!!! note "Adaptación del instrumento"
+    El brief utiliza telemetría real de mercado como fuente continua. No se conectó un sensor físico ni se añadió un segundo caso empresarial/IoT ficticio. La plantilla del curso incluye ambos tipos de ingesta; la equivalencia del instrumento propio debe ser valorada por el docente. Esta documentación no declara ese criterio automáticamente acreditado.
 
-Se utilizan ventanas de cinco minutos (fijas y deslizantes con paso de un minuto), watermark de dos minutos, identificadores estables y checkpoints. Los eventos demasiado tardíos pueden conservarse en archivo durable aunque no alimenten una ventana cerrada.
+### S08 · Ventanas, datos tardíos y recuperación
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-07</span>
-<h4>Consulta Structured Streaming</h4>
-<p>Consola de Spark mostrando queries activas, batchId, filas procesadas y salida a PostgreSQL.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-07.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-08</span>
-<h4>Ventanas y watermark</h4>
-<p>Tabla o salida con inicio/fin de ventana, activos, agregados y manejo de datos tardíos.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-08.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-09</span>
-<h4>Deduplicación y checkpoint</h4>
-<p>Prueba con mensaje repetido y recuperación después de reiniciar, sin duplicación en PostgreSQL.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-09.png</code></span>
-</div>
+El archivo no usa watermark para descartar reparaciones antiguas. Las consultas de ventanas sí aplican watermark de dos minutos y deduplicación acotada por evento. Sus resultados incluyen cantidad de velas, volumen USDT y media de cierres; una ventana finalizada puede tener cobertura incompleta. Una reparación tardía del archivo no reabre una ventana ya purgada.
 
-### S09 · Observabilidad y FinOps
+Los checkpoints persisten offsets y estado. La garantía es entrega al menos una vez con efectos idempotentes por clave, sin transacción global Kafka–PostgreSQL. [Proceso y diccionario SQL](pipeline.md).
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-10</span>
-<h4>Prometheus /targets</h4>
-<p>Vista de targets y recopilación de métricas.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-10.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-11</span>
-<h4>Alertas operativas</h4>
-<p>Reglas y estados de frescura, retraso Kafka y actividad del productor/streaming.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-11.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-12</span>
-<h4>Estimación de costo</h4>
-<p>Salida del escenario de costos CPU, RAM y disco, marcada como estimación editable, no facturación.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-12.png</code></span>
-</div>
+### S09 · Observabilidad y criterio de escalado
 
-### S10 · Inferencia online
+Prometheus distingue transporte, heartbeat, edad de velas, huecos, edad de pronósticos y lag. `product_ready` exige los dos activos con 61 velas consecutivas y siete series recientes. Conexión WebSocket y 7/7 por separado son controles parciales.
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-13</span>
-<h4>Predicciones por activo</h4>
-<p>Resultado de inferencia de volatilidad, caída y actividad para BTC y SOL, más divergencia conjunta.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-13.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-14</span>
-<h4>Evaluación del horizonte madurado</h4>
-<p>Predicciones emitidas y valores posteriores reales, con timestamps y versión del modelo.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-14.png</code></span>
-</div>
+El costo ilustrativo usa 730 h, 3,5 cores, 5,5 GiB RAM y 20 GiB disco: `730 × (3,5 × 0,02 + 5,5 × 0,003) + 20 × 0,1 = 65,145 USD/mes`. No es un cobro Docker ni una tarifa contratada.
 
-### S11 · Integración de resultados
+Con dos activos hay normalmente dos cierres nuevos por minuto, más recuperaciones. Antes de escalar se observarían duración de lotes frente al trigger de 15 s, lag sostenido, memoria del driver y acumulación de pendientes. Más activos pueden requerir particionado por clave, sinks distribuidos, réplicas y redimensionar PostgreSQL; no existe un benchmark que garantice un límite de carga. [Métricas y ocho reglas explicadas](observabilidad.md).
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-15</span>
-<h4>Grafana · Señales actuales</h4>
-<p>Panel con estados NORMAL, VIGILANCIA, ALERTA, REFERENCIA o datos desactualizados.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-15.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-16</span>
-<h4>Grafana · Riesgo por dimensión</h4>
-<p>Gráficas de volatilidad, caída, anomalías y divergencia, comparando observado y previsto.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-16.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-17</span>
-<h4>Grafana · Estado del pipeline</h4>
-<p>Panel de salud, latencia, actividad Kafka y frescura de las series.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-17.png</code></span>
-</div>
+### S10 · Inferencia y evaluación temporal
 
-### S12 · Verificación extremo a extremo
+`ModelBundle` carga el registro una vez, reutiliza `past_features` y aplica pipelines. Las etiquetas futuras no se usan como entradas. Los horizontes son 15/30/5/15 minutos; `actual` se incorpora solo con las velas consecutivas completas y las reglas de la versión original.
 
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-18</span>
-<h4>Ejecución de la validación S12</h4>
-<p>Consola de verificación de la integración con PASS y fecha claramente visible.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-18.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-19</span>
-<h4>Prueba de recuperación</h4>
-<p>Evidencia de interrupción de productor, detección de degradación y recuperación sin huecos.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-19.png</code></span>
-</div>
-<div class="evidence-slot" markdown="1">
-<span class="slot-head">IMAGEN PENDIENTE · U2-20</span>
-<h4>Validación SQL de paneles</h4>
-<p>Consultas SQL de paneles y su resultado, confirmando que el tablero se alimenta de tablas reales.</p>
-<span class="slot-file">Archivo sugerido: <code>assets/evidencias/u2-20.png</code></span>
-</div>
+El test histórico reservado muestra RMSE 0,12919 frente a 0,15080 en volatilidad; Brier 0,02500 frente a 0,02622 en caída; Brier 0,03913 frente a 0,06584 en actividad. Divergencia conserva cero. La precisión de caída es 13,54 % y recall 26,21 %: la mejora probabilística no basta para operar sin revisión. [Variables, muestras y métricas](modelos.md).
 
-## 3. Trazabilidad y procedencia de la rúbrica
+### S11 · BI y ML en el mismo tablero
 
-Esta matriz sirve para **localizar y comprobar evidencias**, sin simular una calificación del docente.
+Grafana consulta PostgreSQL para mercado/modelos y Prometheus para operación. El centro muestra valor, umbral, unidad, antigüedad, explicación y acción. NORMAL es evaluación válida sin cruce; REFERENCIA identifica baseline; datos ausentes o antiguos quedan explícitos. El historial no crea alarmas para llenar espacio. [Lectura de cada panel](dashboard.md).
 
-| Componente a verificar | Qué debe demostrar la evidencia | Fuentes y ubicación |
-|---|---|---|
-| Eventos | Esquema versionado y evento realmente consumido | S06 · U2-02 a U2-04 |
-| Ingesta | Fuente auténtica, continuidad y recuperación | S07 · U2-05 a U2-06 |
-| Estado | Ventanas, watermark, duplicados y checkpoint | S08 · U2-07 a U2-09 |
-| Operación | Métricas y diagnóstico de fallos | S09 · U2-10 a U2-12 |
-| Modelos online | Inferencia sin reentrenar por mensaje y evaluación temporal | S10 · U2-13 a U2-14 |
-| Visualización | KPIs, señales y fuentes interpretables | S11 · U2-15 a U2-17 |
-| Producto integrador | Recuperación y pruebas extremo a extremo | S12 · U2-18 a U2-20 |
+### S12 · Integración demostrable
 
-<div class="cp-callout warning" markdown="1">**Nota metodológica:** esta tabla es una **matriz de trazabilidad adaptada al proyecto**, no una reproducción literal ni una autocertificación de la rúbrica del curso. Para calificar, contrastar los criterios y ponderaciones oficiales en la [guía U2 del docente](https://262bigdata.github.io/lambda26/proyecto-sello/u2-producto/).</div>
+La aceptación guardada del **28 de octubre de 2026, 20:25 Lima**, usa la versión `20261029T011759858407Z.cal`: 40 pruebas de regresión y cinco Spark PASS, integración de las cuatro dimensiones y una interrupción real de 75 s detectada/recuperada. Las siete series avanzaron tres minutos entre muestras; se comprobaron 16 consultas SQL y siete expresiones Prometheus.
 
-## 4. Criterios de aceptación
+Son resultados fechados. Las [evidencias](evidencias.md) diferencian aceptación histórica, nuevas comprobaciones y capturas. Para ejecutarlo de nuevo, seguir [reproducibilidad](ejecucion.md); no copiar un PASS anterior para simular una ejecución.
 
-Un dashboard visualmente cargado no constituye por sí solo una prueba. Para aceptar el producto debe verificarse que se actualizan **las siete series predictivas**, que existen datos observados recientes, que los huecos y duplicados se gestionan explícitamente y que las tablas de Grafana consultan resultados reales del pipeline. En la revisión final documentada se comprobaron pruebas de regresión, Spark e integración; esos resultados deben acompañarse de sus capturas.
+## 2. Correspondencia con la rúbrica de evaluación
 
-## 5. Repositorio y reproducibilidad
+Esta matriz conserva los ocho ámbitos y ponderaciones de la [plantilla oficial U2](https://262bigdata.github.io/lambda26/proyecto-sello/u2-producto/), y localiza evidencia de CryptoPulse. La calificación y la sustentación individual corresponden al docente.
 
-[Ver informe de sesiones S01–S12](https://github.com/abdul8377/big-data-btc-sol/blob/main/docs/INFORME_SESIONES_S01_S12.md) · [Guía final](https://github.com/abdul8377/big-data-btc-sol/blob/main/docs/PRODUCTO_FINAL.md) · [Instrucciones de ejecución](ejecucion.md).
+| Ámbito | Peso | Evidencia y límite |
+|---|---:|---|
+| Eventos con Kafka | 12 % | Topics/contrato y prueba de publicación–lectura sobre el instrumento de mercado |
+| IoT o sensores | 10 % | Adaptación a telemetría de mercado; no hardware físico, equivalencia pendiente de evaluación docente |
+| Procesamiento con estado | 14 % | Ventanas, watermark y checkpoint; ensayo de reinicio/duplicados |
+| Observabilidad | 12 % | Métricas, reglas y paneles; no hay envío externo de alertas configurado |
+| Costos y escalado | 8 % | Fórmula y supuestos explícitos frente a dos cierres por minuto |
+| Salida BI/ML | 12 % | Grafana unificado con KPIs y predicciones |
+| Inferencia temporal validada | 12 % | Partición cronológica, baseline y evaluación posterior |
+| Sustentación | 20 % | Aporte individual, comunicación, presentación, repositorio, documentación y demo deben comprobarse durante la exposición |
+
+No se asignan notas por tener una captura. El código y las pruebas respaldan capacidades; la presentación individual no puede certificarse mediante este sitio.
+
+## 3. Trazabilidad y procedencia
+
+El dominio proviene del brief CryptoPulse; la estructura pedagógica, de la plantilla U2. La implementación se encuentra en `pyspark/sesiones/cryptopulse/`, `platform.yml`, `database/`, `observability/` y `scripts/`. [Código fuente](https://github.com/abdul8377/big-data-btc-sol), [bitácora S01–S12](sesiones.md) e [informe integral](https://raw.githubusercontent.com/abdul8377/big-data-btc-sol/main/site/resources/informe-integral-cryptopulse.md) completan la trazabilidad.
+
+La documentación publicada es estática; los servicios siguen siendo locales. La versión del modelo y las fechas acompañan las evidencias para no presentar resultados guardados como estado actual del mercado.

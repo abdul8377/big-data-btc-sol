@@ -1,0 +1,118 @@
+{
+  "kind": "saved_acceptance",
+  "executed_at": "2026-10-28T20:25:50.2250078-05:00",
+  "model_version": "20261029T011759858407Z.cal",
+  "status": "PASS",
+  "unit_tests": 40,
+  "spark_tests": 5,
+  "integration": {
+    "status": "PASS",
+    "model_version": "20261029T011759858407Z.cal",
+    "verified_at_utc": "2026-10-28T20:21:18.417331-05:00",
+    "contract": {
+      "valid_real_event": true,
+      "invalid_variants_rejected": 6
+    },
+    "streaming": {
+      "duplicate_event_counted_once": true,
+      "late_event_rejected": true,
+      "watermark_rows_dropped": 1,
+      "checkpoint_restart_recovered": true,
+      "isolated_topic": "cryptopulse.integration.8028ed42e1c8"
+    },
+    "models": {
+      "replay_predictions": 7,
+      "future_labels_evaluated": 7,
+      "all_four_dimensions": true,
+      "future_mutation_does_not_change_past_features": true,
+      "prediction_upsert_idempotent": true
+    }
+  },
+  "controlled_outage_seconds": 75,
+  "outage_detected": true,
+  "recovery_ready": true,
+  "sql_panels": [
+    {
+      "panel": "BTCUSDT · cierre de 1 minuto",
+      "frames": 1,
+      "rows": 1
+    },
+    {
+      "panel": "SOLUSDT · cierre de 1 minuto",
+      "frames": 1,
+      "rows": 1
+    },
+    {
+      "panel": "Pronósticos vigentes · objetivo 7/7",
+      "frames": 1,
+      "rows": 1
+    },
+    {
+      "panel": "Frescura y continuidad por activo",
+      "frames": 1,
+      "rows": 2
+    },
+    {
+      "panel": "Señales de mercado · estado, umbral y explicación",
+      "frames": 1,
+      "rows": 14
+    },
+    {
+      "panel": "Historial de cruces · período seleccionado",
+      "frames": 1,
+      "rows": 1
+    },
+    {
+      "panel": "Volatilidad · observada y futura a 15 min",
+      "frames": 1,
+      "rows": 6
+    },
+    {
+      "panel": "Caída significativa · probabilidad a 30 min",
+      "frames": 1,
+      "rows": 6
+    },
+    {
+      "panel": "Actividad anómala · probabilidad a 5 min",
+      "frames": 1,
+      "rows": 6
+    },
+    {
+      "panel": "SOL menos BTC · divergencia a 15 min",
+      "frames": 1,
+      "rows": 6
+    },
+    {
+      "panel": "Correlación BTC / SOL · rendimientos 60 min",
+      "frames": 1,
+      "rows": 14
+    },
+    {
+      "panel": "Actividad observada · referencia por hora UTC",
+      "frames": 1,
+      "rows": 2
+    },
+    {
+      "panel": "Prueba histórica reservada · modelo contra referencia",
+      "frames": 1,
+      "rows": 4
+    },
+    {
+      "panel": "Evaluación en vivo · activo, dimensión y período seleccionado",
+      "frames": 1,
+      "rows": 7
+    },
+    {
+      "panel": "Histórico limpio · corte batch",
+      "frames": 1,
+      "rows": 1
+    },
+    {
+      "panel": "Ventanas finalizadas · cobertura real",
+      "frames": 1,
+      "rows": 4
+    }
+  ],
+  "prometheus_panel_queries": 7,
+  "notice": "Aceptación del 28 de octubre; no representa la salud en tiempo real de GitHub Pages."
+}

@@ -4,6 +4,12 @@
   --cp-amber: #fbbf24;
   --cp-ink: #101a2e;
 }
+.hero p:last-child { display:flex; flex-wrap:wrap; gap:.65rem; }
+.md-typeset img { height:auto; border-radius:12px; }
+@media (max-width:600px) {
+  .md-typeset .hero { padding:1.4rem; }
+  .hero p { font-size:.85rem; line-height:1.65; }
+}
 [data-md-color-scheme="slate"] {
   --md-default-bg-color: #0b1220;
   --md-default-fg-color: #e7eef8;
