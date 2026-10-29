@@ -1,0 +1,80 @@
+site_name: CryptoPulse | Big Data BTC & SOL
+site_description: Plataforma Big Data para análisis de riesgo de BTC y SOL con Spark, Kafka y Grafana.
+site_author: Equipo CryptoPulse
+site_url: https://abdul8377.github.io/big-data-btc-sol/
+repo_name: abdul8377/big-data-btc-sol
+repo_url: https://github.com/abdul8377/big-data-btc-sol
+edit_uri: edit/main/site/docs/
+docs_dir: docs
+site_dir: build
+
+theme:
+  name: material
+  language: es
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.path
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Cambiar a modo claro
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Cambiar a modo oscuro
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+nav:
+  - Inicio: index.md
+  - El proyecto:
+      - Brief técnico-analítico: brief.md
+      - Arquitectura Lambda: arquitectura.md
+      - Dimensiones y modelos: modelos.md
+  - Entregables:
+      - Unidad I · Batch: u1-producto.md
+      - Unidad II · Streaming: u2-producto.md
+      - Unidad III · Producto final: u3-producto.md
+  - Demostración:
+      - Grafana y resultados: dashboard.md
+      - Evidencias S01–S12: sesiones.md
+      - Galería pendiente: evidencias.md
+  - Reproducibilidad: ejecucion.md
+
+plugins:
+  - search:
+      lang: es
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+copyright: © 2026 · CryptoPulse · Proyecto académico Big Data
