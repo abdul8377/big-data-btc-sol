@@ -1,0 +1,20 @@
+name: cryptopulse-pyspark
+services:
+  pyspark:
+    container_name: cryptopulse-pyspark
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4488:8888"
+      - "127.0.0.1:4042:4040"
+    volumes:
+      - ./sesiones:/opt
+    environment:
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-sintoken}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8888/lab', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 12
+      start_period: 30s

@@ -1,0 +1,22 @@
+apiVersion: 1
+datasources:
+  - name: CryptoPulse PostgreSQL
+    uid: cryptopulse-postgres
+    type: postgres
+    url: postgres:5432
+    user: grafana_reader
+    database: cryptopulse
+    jsonData:
+      database: cryptopulse
+      sslmode: disable
+      postgresVersion: 1700
+      timescaledb: false
+    secureJsonData:
+      password: local-grafana-read
+    editable: false
+  - name: CryptoPulse Prometheus
+    uid: cryptopulse-prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    editable: false

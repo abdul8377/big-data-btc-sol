@@ -1,0 +1,139 @@
+name: cryptopulse
+x-runtime: &runtime
+  image: cryptopulse-runtime:local
+  build: {context: ./runtime}
+  restart: unless-stopped
+  volumes:
+    - ./pyspark/sesiones:/opt
+  environment: &environment
+    PYTHONPATH: /opt
+    KAFKA_BOOTSTRAP: kafka:9092
+    PGHOST: postgres
+    PGDATABASE: cryptopulse
+    PGUSER: cryptopulse
+    PGPASSWORD: ${POSTGRES_PASSWORD:-local-cryptopulse}
+  networks: [cryptopulse]
+services:
+  kafka:
+    image: apache/kafka:4.3.1
+    container_name: cryptopulse-kafka
+    restart: unless-stopped
+    ports: ["127.0.0.1:49092:49092"]
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:49092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:49092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_HEAP_OPTS: -Xmx512M -Xms256M
+    volumes: [kafka_data:/var/lib/kafka/data]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    networks: [cryptopulse]
+  postgres:
+    image: postgres:17.6
+    container_name: cryptopulse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cryptopulse
+      POSTGRES_USER: cryptopulse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-cryptopulse}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cryptopulse -d cryptopulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [cryptopulse]
+  producer:
+    <<: *runtime
+    container_name: cryptopulse-producer
+    command: ["python", "-u", "-m", "cryptopulse.producer"]
+    depends_on:
+      kafka: {condition: service_healthy}
+  streaming:
+    <<: *runtime
+    container_name: cryptopulse-streaming
+    stop_grace_period: 60s
+    command: ["spark-submit", "--master", "local[2]", "--driver-memory", "3g", "--conf", "spark.jars.ivy=/opt/_runtime/ivy", "--conf", "spark.jars.ivySettings=/opt/cryptopulse/ivysettings.xml", "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.2.0", "/opt/cryptopulse/stream.py"]
+    environment:
+      <<: *environment
+      INFERENCE_ENABLED: ${INFERENCE_ENABLED:-false}
+    depends_on:
+      kafka: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+  exporter:
+    <<: *runtime
+    container_name: cryptopulse-exporter
+    command: ["python", "-u", "-m", "cryptopulse.exporter"]
+    ports: ["127.0.0.1:48000:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      kafka: {condition: service_healthy}
+  tools:
+    <<: *runtime
+    restart: "no"
+    profiles: [tools]
+    command: ["python", "-m", "cryptopulse.verify"]
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.10.0
+    container_name: cryptopulse-kafka-exporter
+    restart: unless-stopped
+    command: ["--kafka.server=kafka:9092"]
+    depends_on:
+      kafka: {condition: service_healthy}
+    networks: [cryptopulse]
+  kafka-ui:
+    image: ghcr.io/kafbat/kafka-ui:v1.5.0
+    container_name: cryptopulse-kafka-ui
+    restart: unless-stopped
+    ports: ["127.0.0.1:48085:8080"]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: CryptoPulse
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks: [cryptopulse]
+  prometheus:
+    image: prom/prometheus:v3.14.0
+    container_name: cryptopulse-prometheus
+    restart: unless-stopped
+    ports: ["127.0.0.1:49090:9090"]
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    networks: [cryptopulse]
+  grafana:
+    image: grafana/grafana:11.4.0
+    container_name: cryptopulse-grafana
+    restart: unless-stopped
+    ports: ["127.0.0.1:43000:3000"]
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin2026!}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    networks: [cryptopulse]
+volumes:
+  kafka_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+networks:
+  cryptopulse:
+    name: cryptopulse-net

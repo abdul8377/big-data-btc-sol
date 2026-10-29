@@ -1,0 +1,11 @@
+{
+  "currency": "USD",
+  "hours_per_month": 730,
+  "cpu_cores": 3.5,
+  "ram_gib": 5.5,
+  "disk_gib": 20,
+  "cpu_core_hour_usd": 0.02,
+  "ram_gib_hour_usd": 0.003,
+  "disk_gib_month_usd": 0.1,
+  "note": "Tarifas ilustrativas editables; no son cotizaciones de un proveedor ni costos facturados. Docker local no genera esta factura."
+}

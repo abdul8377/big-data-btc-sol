@@ -1,0 +1,30 @@
+flowchart TB
+    SOURCE["Binance Spot BTCUSDT y SOLUSDT"]
+    SOURCE --> HIST["Archivos historicos CSV ZIP 1m"]
+    SOURCE --> WS["WebSocket kline_1m solo velas cerradas"]
+    subgraph BATCH["Capa batch U1"]
+        HIST --> RAW["Historico RAW y procedencia"]
+        RAW --> ETL["PySpark calidad y variables"]
+        ETL --> PQ["Parquet particionado"]
+        PQ --> ML["MLlib entrenamiento y validacion temporal"]
+        ML --> MODELS["Modelos y umbrales versionados"]
+        PQ --> BRES["Resultados historicos"]
+    end
+    subgraph SPEED["Capa de velocidad U2"]
+        WS --> PRODUCER["Productor Python"]
+        PRODUCER --> KAFKA["Kafka topics BTC y SOL"]
+        KAFKA --> STREAM["Spark Structured Streaming"]
+        STREAM --> FEATURES["Variables temporales y sincronizacion"]
+        FEATURES --> INFER["Inferencia por vela cerrada"]
+        MODELS -.-> INFER
+        STREAM -.-> LIVEARCHIVE["Archivo de eventos para recuperacion"]
+        LIVEARCHIVE -.-> RAW
+    end
+    subgraph SERVING["Capa de consulta U2 propuesta"]
+        INFER --> PG["PostgreSQL KPIs predicciones y alertas"]
+        BRES --> PG
+        PG --> GRAF["Grafana tablero unico"]
+    end
+    KAFKA -.-> METRICS["Exporters y Prometheus"]
+    STREAM -.-> METRICS
+    METRICS -.-> GRAF

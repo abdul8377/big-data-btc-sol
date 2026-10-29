@@ -1,0 +1,36 @@
+{
+  "project": "CryptoPulse",
+  "session": "S01",
+  "market": "spot",
+  "interval": "1m",
+  "date_utc": "2025-01-01",
+  "retrieved_at_utc": "2026-10-26T21:34:59.894438+00:00",
+  "synthetic": false,
+  "rows_total": 2880,
+  "archives": [
+    {
+      "symbol": "BTCUSDT",
+      "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-01-01.zip",
+      "checksum_url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-2025-01-01.zip.CHECKSUM",
+      "sha256_zip": "10a12909f1b0e3fcc6b7f502e5ea9be5d1ba3455dd8ab16cc61c8650640ba7c0",
+      "checksum_verified": true,
+      "rows": 1440,
+      "timestamp_unit_raw": "us",
+      "first_open_time_utc": "2025-01-01T00:00:00.000000Z",
+      "last_open_time_utc": "2025-01-01T23:59:00.000000Z"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "url": "https://data.binance.vision/data/spot/daily/klines/SOLUSDT/1m/SOLUSDT-1m-2025-01-01.zip",
+      "checksum_url": "https://data.binance.vision/data/spot/daily/klines/SOLUSDT/1m/SOLUSDT-1m-2025-01-01.zip.CHECKSUM",
+      "sha256_zip": "196968e2317902f3f285c34b8669784972410c338feafbc66f6f354687c03c91",
+      "checksum_verified": true,
+      "rows": 1440,
+      "timestamp_unit_raw": "us",
+      "first_open_time_utc": "2025-01-01T00:00:00.000000Z",
+      "last_open_time_utc": "2025-01-01T23:59:00.000000Z"
+    }
+  ],
+  "csv_sha256": "8e1612a5deb8374175069287c5fb4bed46486524dc09f4c168bb0bb7a6bc9aff",
+  "note": "Muestra real para verificar Spark; no es el historico de entrenamiento 2022+ ni un stream en vivo."
+}

@@ -1,0 +1,1752 @@
+{
+  "uid": "cryptopulse-main",
+  "title": "CryptoPulse · BTC y SOL",
+  "tags": [
+    "cryptopulse",
+    "bigdata",
+    "risk-monitoring"
+  ],
+  "schemaVersion": 40,
+  "version": 2,
+  "refresh": "10s",
+  "timezone": "browser",
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "id": 30,
+      "title": "Estado integral del producto",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 5
+      },
+      "description": "LISTO exige productor y driver recientes, continuidad de 61 velas en ambos activos, siete pronósticos de la versión activa con menos de 3 minutos y retraso acotado. Un contenedor activo no basta.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "LISTO",
+                  "color": "green"
+                },
+                "0": {
+                  "text": "REVISAR DATOS / INFERENCIA",
+                  "color": "red"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "cryptopulse_product_ready",
+          "instant": true,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "BTCUSDT · cierre de 1 minuto",
+      "type": "stat",
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 5
+      },
+      "description": "Último cierre confirmado; verificar frescura antes de usarlo. USDT es el activo de cotización.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "suffix: USDT",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT now() AS time,close::double precision AS value FROM market_candles WHERE symbol='BTCUSDT' AND source_mode<>'replay' ORDER BY open_ms DESC LIMIT 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "SOLUSDT · cierre de 1 minuto",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 5
+      },
+      "description": "Último cierre confirmado; verificar frescura antes de usarlo. USDT es el activo de cotización.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "suffix: USDT",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT now() AS time,close::double precision AS value FROM market_candles WHERE symbol='SOLUSDT' AND source_mode<>'replay' ORDER BY open_ms DESC LIMIT 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "title": "Pronósticos vigentes · objetivo 7/7",
+      "type": "stat",
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 5
+      },
+      "description": "BTC y SOL: volatilidad, caída y anomalía; un pronóstico conjunto SOL−BTC. Frescura máxima: 180 segundos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT now() AS time,count(*)::double precision AS value FROM cp_signal_board WHERE kind='forecast' AND age_seconds<=180",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "title": "Frescura y continuidad por activo",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 24,
+        "h": 5
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT symbol AS \"Activo\",status AS \"Estado\",round(candle_age_seconds,1) AS \"Edad vela · s\",context_rows AS \"Velas contexto / 61\",missing_minutes AS \"Minutos faltantes\",round(kpi_age_seconds,1) AS \"Edad indicadores · s\",to_timestamp(last_close/1000.0) AS \"Último cierre\" FROM cp_asset_health ORDER BY symbol",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "Cómo utilizar CryptoPulse",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Monitoreo de riesgos de BTC y SOL · Binance Spot**  \n1. Comprueba **LISTO** y **7/7**. 2. Revisa el estado observado y el pronóstico por dimensión. 3. Contrasta señales y registra su evolución.  \n**NORMAL** = evaluación reciente sin cruce; **VIGILANCIA / ALERTA** = cruce real del umbral; **SIN EVALUAR / DESACTUALIZADO** = no interpretar como ausencia de riesgo. Las señales apoyan la revisión; no ejecutan órdenes. Horizontes: 5, 15 y 30 minutos. Tiempos mostrados según la zona del tablero."
+      }
+    },
+    {
+      "id": 40,
+      "title": "Centro de señales · diagnóstico y revisión",
+      "type": "row",
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 24,
+        "h": 1
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 10,
+      "title": "Señales de mercado · estado, umbral y explicación",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 24,
+        "h": 11
+      },
+      "description": "Siempre muestra las 14 evaluaciones posibles. NORMAL no es un dato ausente. Probabilidades en escala 0–1; las unidades figuran en cada fila. Señales observadas y predictivas se distinguen explícitamente.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT symbol AS \"Activo\",CASE dimension WHEN 'volatility' THEN 'Volatilidad' WHEN 'crash' THEN 'Caída' WHEN 'anomaly' THEN 'Actividad' ELSE 'Divergencia' END AS \"Dimensión\",CASE kind WHEN 'observed' THEN 'Observada' ELSE 'Pronóstico' END AS \"Origen\",state AS \"Estado\",round(value::numeric,5) AS \"Valor\",round(threshold::numeric,5) AS \"Umbral\",unit AS \"Unidad\",round(age_seconds::numeric,0) AS \"Edad · s\",explanation AS \"Interpretación\",action AS \"Qué revisar\" FROM cp_signal_board ORDER BY dimension,symbol,kind",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "Historial de cruces · período seleccionado",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 26,
+        "w": 24,
+        "h": 8
+      },
+      "description": "Solo cruces reales. Muestra una explicación cuando no hay alertas; no confundir un vacío histórico con salud del pipeline.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "WITH events AS (SELECT to_timestamp(as_of_ms/1000.0) AS \"Fecha\",symbol AS \"Activo\",dimension AS \"Dimensión\",kind AS \"Origen\",CASE severity WHEN 'high' THEN 'ALERTA' ELSE 'VIGILANCIA' END AS \"Estado\",value AS \"Valor\",threshold AS \"Umbral\",explanation AS \"Detalle\",action AS \"Qué revisar\",model_version AS \"Versión\" FROM market_signals WHERE triggered AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) ORDER BY as_of_ms DESC LIMIT 100)\n SELECT * FROM events UNION ALL SELECT NULL,'BTC / SOL','Todas','Estado',CASE WHEN (SELECT count(*) FROM cp_signal_board WHERE kind='forecast' AND age_seconds<=180)=7 THEN 'SIN CRUCES' ELSE 'REVISAR INFERENCIA' END,NULL,NULL,'No hay señales que superen umbrales en el período seleccionado. Comprueba el estado actual arriba.','No se generan alertas artificiales para llenar esta tabla.',NULL WHERE NOT EXISTS(SELECT 1 FROM events)",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "title": "Cuatro dimensiones · observado, pronóstico y realidad posterior",
+      "type": "row",
+      "gridPos": {
+        "x": 0,
+        "y": 34,
+        "w": 24,
+        "h": 1
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 5,
+      "title": "Volatilidad · observada y futura a 15 min",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 35,
+        "w": 12,
+        "h": 9
+      },
+      "description": "Volatilidad realizada = 100√Σ(log-retorno²), sin anualizar. La realidad futura se alinea al origen del pronóstico; solo existe después de 15 minutos completos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · observada reciente' AS metric,observed AS value FROM predictions WHERE dimension='volatility' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) UNION ALL SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · pronóstico' AS metric,forecast AS value FROM predictions WHERE dimension='volatility' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) UNION ALL SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · realidad futura' AS metric,actual AS value FROM predictions WHERE dimension='volatility' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) AND actual IS NOT NULL ORDER BY 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Caída significativa · probabilidad a 30 min",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 35,
+        "w": 12,
+        "h": 9
+      },
+      "description": "Probabilidad de rendimiento al cierre de 30 minutos bajo P5 histórico: BTC −0,558 %; SOL −1,116 %. No estima el mínimo intraintervalo. Modelo limitado: consultar precisión y recall históricos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          },
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · pronóstico' AS metric,forecast AS value FROM predictions WHERE dimension='crash' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) ORDER BY 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Actividad anómala · probabilidad a 5 min",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 44,
+        "w": 12,
+        "h": 9
+      },
+      "description": "Probabilidad de superar P95 de volumen u operaciones en los siguientes 5 minutos, por activo y hora UTC. La anomalía observada se muestra separada en el centro de señales.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          },
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · pronóstico' AS metric,forecast AS value FROM predictions WHERE dimension='anomaly' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) ORDER BY 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "SOL menos BTC · divergencia a 15 min",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 44,
+        "w": 12,
+        "h": 9
+      },
+      "description": "Puntos porcentuales de rendimiento SOL menos BTC. El regresor candidato no superó la referencia: pronóstico desplegado cero. La señal OBSERVADA detecta desacoplamientos reales.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "suffix: p.p.",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · observada reciente' AS metric,observed AS value FROM predictions WHERE dimension='divergence' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) UNION ALL SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · pronóstico' AS metric,forecast AS value FROM predictions WHERE dimension='divergence' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) UNION ALL SELECT to_timestamp(as_of_ms/1000.0) AS time,symbol||' · realidad futura' AS metric,actual AS value FROM predictions WHERE dimension='divergence' AND source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) AND actual IS NOT NULL ORDER BY 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Correlación BTC / SOL · rendimientos 60 min",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 53,
+        "w": 12,
+        "h": 8
+      },
+      "description": "Pearson sobre rendimientos consecutivos de un minuto: −1 a +1. Correlación no implica causalidad.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          },
+          "min": -1,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT to_timestamp(as_of_ms/1000.0) AS time,(metrics->>'correlation_60m')::double precision AS value FROM market_kpis WHERE symbol='BTC-SOL' AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) ORDER BY 1",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "title": "Actividad observada · referencia por hora UTC",
+      "type": "table",
+      "gridPos": {
+        "x": 12,
+        "y": 53,
+        "w": 12,
+        "h": 8
+      },
+      "description": "P95 y Z score respecto del entrenamiento 2022–2024 para activo/hora UTC. Comprueba frescura arriba; no atribuye fraude.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT DISTINCT ON(symbol) symbol AS \"Activo\",to_timestamp(as_of_ms/1000.0) AS \"Cierre\",round((metrics->>'quote5')::numeric,0) AS \"USDT · 5 min\",round((metrics->>'quote5_p95')::numeric,0) AS \"USDT · P95\",(metrics->>'trades5')::bigint AS \"Operaciones · 5 min\",round((metrics->>'trades5_p95')::numeric,0) AS \"Operaciones · P95\",round((metrics->>'volume_zscore')::numeric,2) AS \"Z volumen\" FROM market_kpis WHERE symbol IN ('BTCUSDT','SOLUSDT') ORDER BY symbol,as_of_ms DESC",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "title": "Evidencia de utilidad · errores y referencias",
+      "type": "row",
+      "gridPos": {
+        "x": 0,
+        "y": 61,
+        "w": 24,
+        "h": 1
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 11,
+      "title": "Prueba histórica reservada · modelo contra referencia",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 62,
+        "w": 24,
+        "h": 8
+      },
+      "description": "Prueba enero–septiembre 2026, muestreo cada 15 min. MAE/RMSE en unidad de su objetivo; Brier menor es mejor. Precisión y recall son proporciones. No se reentrena con esta prueba para escoger modelos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT m.dimension AS \"Dimensión\",m.method AS \"Método desplegado\",(m.metrics->>'n')::bigint AS \"Casos\",(m.metrics->>'mae')::float AS \"MAE\",(m.metrics->>'rmse')::float AS \"RMSE\",(b.metrics->>'rmse')::float AS \"RMSE referencia\",(m.metrics->>'pr_auc')::float AS \"PR AUC\",(m.metrics->>'brier')::float AS \"Brier\",(b.metrics->>'brier')::float AS \"Brier referencia\",(m.metrics->>'precision')::float AS \"Precisión\",(m.metrics->>'recall')::float AS \"Recall\",m.model_version AS \"Versión\" FROM model_metrics m JOIN model_metrics b ON b.dimension=m.dimension AND b.model_version=m.model_version AND b.split='test_baseline' WHERE m.split='test_deployed' AND m.model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') ORDER BY m.dimension",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Evaluación en vivo · activo, dimensión y período seleccionado",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 70,
+        "w": 24,
+        "h": 8
+      },
+      "description": "Solo la versión activa y el período elegido. Los horizontes todavía abiertos o con datos incompletos permanecen pendientes. Clasificación usa Brier; no se mezcla con RMSE de precios.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT dimension AS \"Dimensión\",symbol AS \"Activo\",count(*) AS \"Emitidas\",count(actual) AS \"Evaluadas\",count(*) FILTER(WHERE actual IS NULL) AS \"Pendientes\",avg(abs(forecast-actual)) FILTER(WHERE dimension IN ('volatility','divergence')) AS \"MAE regresión\",sqrt(avg(power(forecast-actual,2)) FILTER(WHERE dimension IN ('volatility','divergence'))) AS \"RMSE regresión\",avg(power(forecast-actual,2)) FILTER(WHERE dimension IN ('crash','anomaly')) AS \"Brier clasificación\",avg(power(baseline-actual,2)) AS \"MSE referencia\" FROM predictions WHERE source_mode='live' AND model_version=(SELECT value FROM runtime_configuration WHERE key='active_model_version') AND (as_of_ms BETWEEN $__unixEpochFrom()::bigint*1000 AND $__unixEpochTo()::bigint*1000) GROUP BY dimension,symbol ORDER BY dimension,symbol",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "title": "Operación · recepción, procesamiento y persistencia",
+      "type": "row",
+      "gridPos": {
+        "x": 0,
+        "y": 78,
+        "w": 24,
+        "h": 1
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 13,
+      "title": "WebSocket · 1 conectado",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 79,
+        "w": 6,
+        "h": 5
+      },
+      "description": "La conexión no sustituye continuidad e inferencia.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "cryptopulse_producer_connected",
+          "instant": true,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Spark · edad de señal de vida",
+      "type": "stat",
+      "gridPos": {
+        "x": 6,
+        "y": 79,
+        "w": 6,
+        "h": 5
+      },
+      "description": "La alerta integral comprueba además pronósticos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "cryptopulse_stream_heartbeat_age_seconds",
+          "instant": true,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Kafka · eventos pendientes",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 79,
+        "w": 6,
+        "h": 5
+      },
+      "description": "Lag de archivo de velas respecto de offsets disponibles.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(cryptopulse_kafka_checkpoint_lag)",
+          "instant": true,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Escenario de costo · sin facturación",
+      "type": "stat",
+      "gridPos": {
+        "x": 18,
+        "y": 79,
+        "w": 6,
+        "h": 5
+      },
+      "description": "Hipótesis editables; no cobro Docker ni cotización. CPU, memoria, disco y horas configurados.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "cryptopulse_estimated_monthly_cost_usd",
+          "instant": true,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Spark · duración de micro-lotes",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 84,
+        "w": 12,
+        "h": 7
+      },
+      "description": "Comparar duración con intervalo de 15 s. Los lotes de recuperación pueden excederlo.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "cryptopulse_batch_duration_seconds",
+          "instant": false,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Kafka · avance acumulado por tópico",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 12,
+        "y": 84,
+        "w": 12,
+        "h": 7
+      },
+      "description": "Suma de offsets. No es tasa de mensajes por segundo ni número retenido.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 6,
+            "spanNulls": false,
+            "showPoints": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cryptopulse-prometheus"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by(topic) (kafka_topic_partition_current_offset{topic=~\"market.klines.*\"})",
+          "instant": false,
+          "legendFormat": "{{query}}{{symbol}}{{topic}}"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "title": "Histórico limpio · corte batch",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 91,
+        "w": 6,
+        "h": 5
+      },
+      "description": "2022-01 a 2026-09. Archivos públicos con SHA256. Dos registros inválidos excluidos.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT now() AS time,sum(candles)::double precision AS value FROM batch_kpis",
+          "format": "time_series",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "title": "Ventanas finalizadas · cobertura real",
+      "type": "table",
+      "gridPos": {
+        "x": 6,
+        "y": 91,
+        "w": 18,
+        "h": 5
+      },
+      "description": "Fijas 5 min y deslizantes 5 min/paso 1 min. Watermark 2 min: una ventana finalizada puede estar incompleta; el archivo conserva reparaciones tardías.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "Pendiente",
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "wrapText": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "NORMAL": {
+                        "text": "NORMAL",
+                        "color": "green"
+                      },
+                      "LISTO": {
+                        "text": "LISTO",
+                        "color": "green"
+                      },
+                      "VIGILANCIA": {
+                        "text": "VIGILANCIA",
+                        "color": "orange"
+                      },
+                      "ALERTA": {
+                        "text": "ALERTA",
+                        "color": "red"
+                      },
+                      "DESACTUALIZADO": {
+                        "text": "DESACTUALIZADO",
+                        "color": "red"
+                      },
+                      "SIN EVALUAR": {
+                        "text": "SIN EVALUAR",
+                        "color": "gray"
+                      },
+                      "REFERENCIA": {
+                        "text": "REFERENCIA",
+                        "color": "blue"
+                      },
+                      "DATOS INCOMPLETOS": {
+                        "text": "DATOS INCOMPLETOS",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "cryptopulse-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "cryptopulse-postgres"
+          },
+          "rawSql": "SELECT kind AS \"Ventana\",symbol AS \"Activo\",max(window_end) AS \"Último cierre finalizado\",count(*) AS \"Ventanas\",count(*) FILTER(WHERE candles<>5) AS \"Incompletas\" FROM stream_windows GROUP BY kind,symbol ORDER BY kind,symbol",
+          "format": "table",
+          "rawQuery": true
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "title": "Estado técnico JSON",
+      "type": "link",
+      "url": "http://localhost:48000/api/status",
+      "targetBlank": true
+    },
+    {
+      "title": "Kafka UI",
+      "type": "link",
+      "url": "http://localhost:48085",
+      "targetBlank": true
+    }
+  ]
+}

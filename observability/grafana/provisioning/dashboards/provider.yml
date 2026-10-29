@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: CryptoPulse
+    orgId: 1
+    folder: CryptoPulse
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    options:
+      path: /var/lib/grafana/dashboards

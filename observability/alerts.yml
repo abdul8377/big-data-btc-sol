@@ -1,0 +1,54 @@
+groups:
+  - name: cryptopulse
+    rules:
+      - alert: CryptoPulseExporterUnavailable
+        expr: up{job="cryptopulse"} == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: El exportador CryptoPulse no responde
+      - alert: CryptoPulseStaleMarket
+        expr: cryptopulse_last_candle_age_seconds > 180
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: Mas de tres minutos sin una vela cerrada reciente
+      - alert: CryptoPulseStreamingStopped
+        expr: cryptopulse_stream_heartbeat_age_seconds > 60
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: El driver Spark no actualiza su heartbeat
+      - alert: CryptoPulseKafkaLag
+        expr: cryptopulse_kafka_checkpoint_lag > 100
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: Spark acumula mas de cien eventos pendientes
+      - alert: CryptoPulseWebSocketDisconnected
+        expr: cryptopulse_websocket_age_seconds > 90
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: Revisar WebSocket y respaldo REST
+      - alert: CryptoPulseStalePrediction
+        expr: cryptopulse_prediction_age_seconds > 180
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: La serie de pronosticos lleva mas de tres minutos sin actualizarse
+          description: Revisar contexto de velas, version de modelo e inferencia; la conexion WebSocket por si sola no confirma pronosticos utiles.
+      - alert: CryptoPulseMarketGap
+        expr: cryptopulse_recent_missing_minutes > 0
+        for: 30s
+        labels: {severity: warning}
+        annotations:
+          summary: Faltan minutos intermedios en el contexto de un activo
+          description: El productor debe recuperar las velas originales; no se imputan precios para forzar pronosticos.
+      - alert: CryptoPulseProductDegraded
+        expr: cryptopulse_product_ready == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: CryptoPulse no cumple las condiciones de datos e inferencia recientes
+          description: Consulta /api/status para conocer el motivo por activo y por serie.
