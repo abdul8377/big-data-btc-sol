@@ -2,7 +2,7 @@
 
 ## Qué se hizo en cada sesión S01–S12
 
-La guía y repositorio `lambda26` se utilizaron como base técnica. CryptoPulse adapta sus capacidades al brief de mercado: en lugar de copiar los sensores, dominios y datasets de ejemplo, conserva las etapas necesarias para BTC/SOL. Los roles, firmas, capturas académicas y asignaciones de integrantes se dejaron fuera por solicitud del usuario.
+La guía y repositorio `lambda26` se utilizaron como base técnica. CryptoPulse adapta sus capacidades al brief de mercado: en lugar de copiar los sensores, dominios y datasets de ejemplo, conserva las etapas necesarias para BTC/SOL. Los roles, firmas y asignaciones de integrantes se dejaron fuera por solicitud del usuario. El 30/10 se añadieron capturas técnicas reales a la [galería](evidencias.md), conforme a la solicitud posterior de documentar visualmente el producto.
 
 ### S01 — Arquitectura y entorno
 

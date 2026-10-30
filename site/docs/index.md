@@ -23,6 +23,14 @@ Vigilancia de BTC y SOL con datos reales de Binance Spot. Un histórico validado
 <div class="kpi"><span class="kpi-number">23</span><span class="kpi-label">paneles de datos Grafana</span></div>
 </div>
 
+## El producto funcionando
+
+[![CryptoPulse funcionando en Grafana: LISTO y siete pronósticos](assets/evidencias/grafana-estado.jpg)](assets/evidencias/grafana-estado.jpg)
+
+*30/10/2026, 07:01:26 · Lima (UTC−5). Captura real del producto local, con continuidad BTC/SOL y datos de Binance. Pulsa la imagen para verla a tamaño completo.*
+
+[Ver las 14 capturas y las pruebas del arranque](evidencias.md).
+
 ## Qué problema resuelve
 
 Mirar el precio actual deja preguntas abiertas: ¿es una fluctuación extraordinaria?, ¿hay riesgo de caída?, ¿la actividad es inusual para ese horario?, ¿SOL se está separando de BTC? CryptoPulse combina esas cuatro perspectivas y muestra valor, unidad, umbral, antigüedad y motivo de revisión.
@@ -44,7 +52,7 @@ El regresor de divergencia no superó la referencia. El clasificador de caídas 
 
 Este sitio es documentación estática en GitHub Pages. **No ejecuta Kafka, Spark ni Grafana en Internet.** El producto corre en contenedores locales y se reproduce con la [guía de ejecución](ejecucion.md). Las capturas y evidencias indican cuándo fueron tomadas; no son cotizaciones en directo.
 
-La documentación se revisó el **29 de octubre de 2026** contra código, registro de modelos y aceptación guardada. Versión analítica: `20261029T011759858407Z.cal`. La aceptación del 28 de octubre registró 40 pruebas unitarias, cinco con Spark e integración PASS. La [galería y evidencia](evidencias.md) distingue esas ejecuciones de las comprobaciones actuales.
+El **30 de octubre de 2026** se levantó el producto y se añadieron 14 capturas reales. La integración y la verificación S12 volvieron a pasar; la galería incluye su registro descargable. La revisión técnica del contenido se realizó contra código, registro de modelos y aceptación guardada. Versión analítica: `20261029T011759858407Z.cal`. La aceptación del 28 de octubre registró 40 pruebas unitarias, cinco con Spark e integración PASS. La [galería y evidencia](evidencias.md) distingue esas ejecuciones de las comprobaciones actuales.
 
 ## Recorrido de lectura
 

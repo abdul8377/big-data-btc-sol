@@ -1,5 +1,11 @@
 # Herramientas: para qué se usa cada una
 
+[![Docker Desktop con los proyectos CryptoPulse y PySpark activos](assets/evidencias/docker-desktop.jpg)](assets/evidencias/docker-desktop.jpg)
+
+*30/10/2026, 07:02:19 · Lima (UTC−5). Entorno local activo; los dos grupos están contraídos en esta vista. Pulsa la imagen para verla a tamaño completo.*
+
+[Capturas de cada interfaz y explicación de su función](evidencias.md).
+
 ## 4. Herramientas y responsabilidad concreta de cada una
 
 ### Docker Desktop y Docker Compose

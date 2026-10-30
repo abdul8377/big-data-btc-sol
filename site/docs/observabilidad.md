@@ -1,5 +1,13 @@
 # Prometheus, API y salud técnica
 
+[![Prometheus con los tres targets UP](assets/evidencias/prometheus-targets.jpg)](assets/evidencias/prometheus-targets.jpg)
+
+*30/10/2026, 06:55:29 · Lima (UTC−5). El scraping de los tres targets respondió correctamente en esta muestra. Pulsa la imagen para verla a tamaño completo.*
+
+[![Prometheus con ocho reglas operativas cargadas](assets/evidencias/prometheus-alertas.jpg)](assets/evidencias/prometheus-alertas.jpg)
+
+*30/10/2026, 06:55:32 · Lima (UTC−5). Las reglas estaban INACTIVE; no se estaban disparando en el momento de la captura. Pulsa la imagen para verla a tamaño completo.*
+
 ## API de producto, salud y observabilidad técnica
 
 ### Qué hace el exportador

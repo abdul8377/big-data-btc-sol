@@ -3,6 +3,10 @@
 !!! note "Sitio estático y producto local"
     Los puertos localhost de esta guía funcionan en el ordenador donde se ejecuta Docker. GitHub Pages publica documentación y no aloja los contenedores. Los accesos se consultan en la configuración local; no es necesario proporcionar claves Binance.
 
+## Último arranque documentado
+
+El **30/10/2026** se levantaron producto y Jupyter; integración y S12 pasaron con la versión `20261029T011759858407Z.cal`. Se publicaron [14 capturas reales y el registro de ejecución](evidencias.md). Se conservaron históricos/modelos de Windows y se recrearon los servicios en el motor disponible. Esta evidencia es fechada; para comprobar la instancia actual consultar `/health` y `/api/status`.
+
 ## Operación del proyecto: arranque, verificación y parada
 
 ### Requisitos y qué necesita estar presente

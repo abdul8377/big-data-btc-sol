@@ -12,6 +12,14 @@ El resultado permite seguir volatilidad, caídas, actividad inusual y divergenci
 
 *La capa de velocidad reutiliza modelos del histórico y converge en la base de servicio.*
 
+## Producto en ejecución
+
+[![Producto U2 en ejecución: Grafana LISTO y siete series vigentes](assets/evidencias/grafana-estado.jpg)](assets/evidencias/grafana-estado.jpg)
+
+*30/10/2026, 07:01:26 · Lima (UTC−5). El arranque del 30 de octubre alcanzó contexto completo, cero huecos recientes y las siete series de la versión activa. Pulsa la imagen para verla a tamaño completo.*
+
+La [galería de 14 capturas](evidencias.md) documenta Grafana, Kafka, Prometheus, PostgreSQL, JupyterLab, Spark UI y Docker Desktop. Incluye fecha, lectura y límites de cada imagen.
+
 ## 1. Alcance de capacidades por sesión
 
 | Sesión | Capacidad implementada | Cómo comprobarla |
@@ -29,6 +37,10 @@ El resultado permite seguir volatilidad, caídas, actividad inusual y divergenci
 `market.klines.btcusdt` y `market.klines.solusdt` reciben objetos con identidad `symbol:1m:open_ms`, OHLC, actividad, cierre, origen y versión. Se publican con clave por símbolo, idempotencia Kafka y confirmación antes de avanzar el cursor REST. Cada topic tiene tres particiones y replicación 1.
 
 El archivo valida rangos, tipos, OHLC y tiempo. Los rechazos Kafka se conservan en PostgreSQL; `market.deadletter` existe, pero no recibe automáticamente esos rechazos. Las claves SQL evitan duplicar velas/predicciones bajo reintentos. [Contrato e ingesta en detalle](pipeline.md).
+
+[![S06: mensajes reales BTCUSDT publicados en Kafka](assets/evidencias/kafka-mensajes.jpg)](assets/evidencias/kafka-mensajes.jpg)
+
+*30/10/2026, 07:01:33 · Lima (UTC−5). Offsets, clave y mensajes JSON del topic BTCUSDT inspeccionados en Kafka UI. Pulsa la imagen para verla a tamaño completo.*
 
 ### S07 · Fuente de telemetría del brief
 
@@ -51,19 +63,33 @@ El costo ilustrativo usa 730 h, 3,5 cores, 5,5 GiB RAM y 20 GiB disco: `730 × (
 
 Con dos activos hay normalmente dos cierres nuevos por minuto, más recuperaciones. Antes de escalar se observarían duración de lotes frente al trigger de 15 s, lag sostenido, memoria del driver y acumulación de pendientes. Más activos pueden requerir particionado por clave, sinks distribuidos, réplicas y redimensionar PostgreSQL; no existe un benchmark que garantice un límite de carga. [Métricas y ocho reglas explicadas](observabilidad.md).
 
+[![S09: tres targets Prometheus disponibles](assets/evidencias/prometheus-targets.jpg)](assets/evidencias/prometheus-targets.jpg)
+
+*30/10/2026, 06:55:29 · Lima (UTC−5). Scraping disponible para CryptoPulse, Kafka Exporter y Prometheus. La galería muestra también las ocho reglas técnicas. Pulsa la imagen para verla a tamaño completo.*
+
 ### S10 · Inferencia y evaluación temporal
 
 `ModelBundle` carga el registro una vez, reutiliza `past_features` y aplica pipelines. Las etiquetas futuras no se usan como entradas. Los horizontes son 15/30/5/15 minutos; `actual` se incorpora solo con las velas consecutivas completas y las reglas de la versión original.
 
 El test histórico reservado muestra RMSE 0,12919 frente a 0,15080 en volatilidad; Brier 0,02500 frente a 0,02622 en caída; Brier 0,03913 frente a 0,06584 en actividad. Divergencia conserva cero. La precisión de caída es 13,54 % y recall 26,21 %: la mejora probabilística no basta para operar sin revisión. [Variables, muestras y métricas](modelos.md).
 
+[![S10: las siete series live consultadas en PostgreSQL](assets/evidencias/postgresql-consulta.jpg)](assets/evidencias/postgresql-consulta.jpg)
+
+*30/10/2026, 07:01:31 · Lima (UTC−5). Los métodos y el estado de evaluación se conservan junto al pronóstico; la última ancla espera su horizonte futuro. Pulsa la imagen para verla a tamaño completo.*
+
 ### S11 · BI y ML en el mismo tablero
 
 Grafana consulta PostgreSQL para mercado/modelos y Prometheus para operación. El centro muestra valor, umbral, unidad, antigüedad, explicación y acción. NORMAL es evaluación válida sin cruce; REFERENCIA identifica baseline; datos ausentes o antiguos quedan explícitos. El historial no crea alarmas para llenar espacio. [Lectura de cada panel](dashboard.md).
 
+[![S11: señales de mercado con explicación en Grafana](assets/evidencias/grafana-senales.jpg)](assets/evidencias/grafana-senales.jpg)
+
+*30/10/2026, 06:57:57 · Lima (UTC−5). La tabla permite revisar valores y umbrales incluso cuando no hay cruces activos. Pulsa la imagen para verla a tamaño completo.*
+
 ### S12 · Integración demostrable
 
 La aceptación guardada del **28 de octubre de 2026, 20:25 Lima**, usa la versión `20261029T011759858407Z.cal`: 40 pruebas de regresión y cinco Spark PASS, integración de las cuatro dimensiones y una interrupción real de 75 s detectada/recuperada. Las siete series avanzaron tres minutos entre muestras; se comprobaron 16 consultas SQL y siete expresiones Prometheus.
+
+**Nueva comprobación del 30 de octubre:** publicación/lectura Kafka PASS, integración de contrato/duplicados/watermark/checkpoint/modelos PASS y S12 PASS a las **06:51:29 de Lima**. Las evidencias S03–S05 y los modelos se reutilizaron; no se repitieron las 40+5 regresiones ni la interrupción de 75 s en este arranque.
 
 Son resultados fechados. Las [evidencias](evidencias.md) diferencian aceptación histórica, nuevas comprobaciones y capturas. Para ejecutarlo de nuevo, seguir [reproducibilidad](ejecucion.md); no copiar un PASS anterior para simular una ejecución.
 

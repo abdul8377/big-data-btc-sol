@@ -1,5 +1,11 @@
 # Grafana: cómo interpretar cada panel
 
+[![Grafana: estado y continuidad del producto funcionando](assets/evidencias/grafana-estado.jpg)](assets/evidencias/grafana-estado.jpg)
+
+*30/10/2026, 07:01:26 · Lima (UTC−5). Vista real del arranque verificado. Los números son de esta captura y no del momento de lectura del sitio. Pulsa la imagen para verla a tamaño completo.*
+
+[Galería completa: señales, riesgos, modelos y operación](evidencias.md#grafana-del-estado-tecnico-a-la-revision-de-mercado).
+
 ## Grafana: explicación de cada elemento visible
 
 ### Fuentes, filtros y convenciones del tablero

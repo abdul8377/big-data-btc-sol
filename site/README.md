@@ -19,3 +19,7 @@ El workflow `.github/workflows/cryptopulse-docs.yml` compila y publica al cambia
 Al añadir capturas reales, guardar fecha, herramienta, condiciones y qué se puede concluir en `evidencias.md`. Distinguir una ejecución guardada de un estado actual. Los diagramas no se presentan como capturas de herramientas.
 
 La implementación adapta la fuente de sensores a telemetría real de mercado conforme al brief. La equivalencia académica y la sustentación individual corresponden al docente.
+
+## Evidencia visual incorporada
+
+El 30/10/2026 se levantó el producto local y se añadieron 14 capturas reales en `docs/assets/evidencias/`, documentadas en `docs/evidencias.md`. Integración y S12 PASS. `docs/assets/downloads/ejecucion-capturas-2026-10-30.json` conserva fechas y contexto; el sitio público sigue siendo documentación estática.

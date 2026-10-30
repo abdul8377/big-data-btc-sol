@@ -1,0 +1,433 @@
+{
+  "captured_on": "2026-10-30",
+  "timezone": "America/Lima",
+  "model_version": "20261029T011759858407Z.cal",
+  "health": {
+    "ready": true,
+    "status": "ready",
+    "checked_at_ms": 1793361704185,
+    "active_model_version": "20261029T011759858407Z.cal",
+    "stream_age_seconds": 2.758,
+    "producer_age_seconds": 1.031,
+    "symbols": [
+      {
+        "symbol": "BTCUSDT",
+        "last_close_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "context_rows": 61,
+        "missing_minutes": 0,
+        "context_ready": true,
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "symbol": "SOLUSDT",
+        "last_close_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "context_rows": 61,
+        "missing_minutes": 0,
+        "context_ready": true,
+        "status": "ready",
+        "reasons": []
+      }
+    ],
+    "prediction_series": [
+      {
+        "dimension": "volatility",
+        "symbol": "BTCUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "volatility",
+        "symbol": "SOLUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "crash",
+        "symbol": "BTCUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "crash",
+        "symbol": "SOLUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "anomaly",
+        "symbol": "BTCUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "anomaly",
+        "symbol": "SOLUSDT",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      },
+      {
+        "dimension": "divergence",
+        "symbol": "BTC-SOL",
+        "as_of_ms": 1793361659999,
+        "age_seconds": 44.186,
+        "lag_minutes": 0.0,
+        "model_version": "20261029T011759858407Z.cal",
+        "status": "ready",
+        "reasons": []
+      }
+    ],
+    "reasons": [],
+    "pending_evaluations": [],
+    "policy": {
+      "context_candles": 61,
+      "max_data_age_seconds": 180,
+      "max_prediction_lag_minutes": 2
+    }
+  },
+  "signals": {
+    "state": "no_alerts",
+    "rows": 14,
+    "active_alerts": 0
+  },
+  "targets": [
+    {
+      "job": "cryptopulse",
+      "health": "up"
+    },
+    {
+      "job": "kafka",
+      "health": "up"
+    },
+    {
+      "job": "prometheus",
+      "health": "up"
+    }
+  ],
+  "s12": {
+    "session": "S12",
+    "status": "PASS",
+    "verified_at_utc": "2026-10-30T11:51:29.628327+00:00",
+    "unit": 2,
+    "sessions": {
+      "S03": "PASS",
+      "S04": "PASS",
+      "S05": "PASS",
+      "S06": "PASS",
+      "S07": "PASS",
+      "S08": "PASS",
+      "S09": "PASS",
+      "S10": "PASS",
+      "S11": "PASS"
+    },
+    "duplicate_candles": 0,
+    "fresh_candles": [
+      {
+        "symbol": "SOLUSDT",
+        "latest_ms": 1793361059999
+      },
+      {
+        "symbol": "BTCUSDT",
+        "latest_ms": 1793361059999
+      }
+    ],
+    "integration_tests": {
+      "status": "PASS",
+      "model_version": "20261029T011759858407Z.cal",
+      "verified_at_utc": "2026-10-30T11:50:39.378711+00:00",
+      "contract": {
+        "valid_real_event": true,
+        "invalid_variants_rejected": 6
+      },
+      "streaming": {
+        "duplicate_event_counted_once": true,
+        "late_event_rejected": true,
+        "watermark_rows_dropped": 1,
+        "checkpoint_restart_recovered": true,
+        "isolated_topic": "cryptopulse.integration.e2bd7a8e3fbd"
+      },
+      "models": {
+        "replay_predictions": 7,
+        "future_labels_evaluated": 7,
+        "all_four_dimensions": true,
+        "future_mutation_does_not_change_past_features": true,
+        "prediction_upsert_idempotent": true
+      }
+    },
+    "integration_evidence": "Resultado guardado y versionado; para ejecutar de nuevo usa scripts/pruebas_integracion.ps1",
+    "health": {
+      "ready": true,
+      "status": "ready",
+      "checked_at_ms": 1793361089213,
+      "active_model_version": "20261029T011759858407Z.cal",
+      "stream_age_seconds": 3.104,
+      "producer_age_seconds": 3.255,
+      "symbols": [
+        {
+          "symbol": "BTCUSDT",
+          "last_close_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "context_rows": 61,
+          "missing_minutes": 0,
+          "context_ready": true,
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "symbol": "SOLUSDT",
+          "last_close_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "context_rows": 61,
+          "missing_minutes": 0,
+          "context_ready": true,
+          "status": "ready",
+          "reasons": []
+        }
+      ],
+      "prediction_series": [
+        {
+          "dimension": "volatility",
+          "symbol": "BTCUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "volatility",
+          "symbol": "SOLUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "crash",
+          "symbol": "BTCUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "crash",
+          "symbol": "SOLUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "anomaly",
+          "symbol": "BTCUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "anomaly",
+          "symbol": "SOLUSDT",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        },
+        {
+          "dimension": "divergence",
+          "symbol": "BTC-SOL",
+          "as_of_ms": 1793361059999,
+          "age_seconds": 29.214,
+          "lag_minutes": 0.0,
+          "model_version": "20261029T011759858407Z.cal",
+          "status": "ready",
+          "reasons": []
+        }
+      ],
+      "reasons": [],
+      "pending_evaluations": [],
+      "policy": {
+        "context_candles": 61,
+        "max_data_age_seconds": 180,
+        "max_prediction_lag_minutes": 2
+      }
+    },
+    "live_evaluated": [],
+    "replay_evaluated": [
+      {
+        "dimension": "anomaly",
+        "n": 2
+      },
+      {
+        "dimension": "crash",
+        "n": 2
+      },
+      {
+        "dimension": "divergence",
+        "n": 1
+      },
+      {
+        "dimension": "volatility",
+        "n": 2
+      }
+    ],
+    "live_future_results": "Se incorporan al madurar los horizontes de 5,15 y30 minutos; no se adelanta la verdad futura."
+  },
+  "captures": [
+    {
+      "file": "prometheus-targets.jpg",
+      "tool": "Prometheus",
+      "title": "Prometheus Time Series Collection and Processing Server",
+      "captured_at_lima": "2026-10-30T06:55:29.559767-05:00",
+      "meaning": "Tres targets UP: exportador CryptoPulse, Kafka Exporter y Prometheus."
+    },
+    {
+      "file": "prometheus-alertas.jpg",
+      "tool": "Prometheus",
+      "title": "Prometheus Time Series Collection and Processing Server",
+      "captured_at_lima": "2026-10-30T06:55:32.341597-05:00",
+      "meaning": "Reglas técnicas de frescura, continuidad, retrasos y disponibilidad."
+    },
+    {
+      "file": "kafka-topics.jpg",
+      "tool": "Kafka UI",
+      "title": "Kafbat UI",
+      "captured_at_lima": "2026-10-30T06:55:34.157215-05:00",
+      "meaning": "Topics reales por activo, particiones y conteos del broker local."
+    },
+    {
+      "file": "grafana-senales.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T06:57:57.012195-05:00",
+      "meaning": "Evaluaciones observadas y predictivas con valores, unidades, umbrales y motivo."
+    },
+    {
+      "file": "grafana-riesgos.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T06:57:58.375077-05:00",
+      "meaning": "Volatilidad y probabilidad de caída, con datos reales recientes."
+    },
+    {
+      "file": "grafana-divergencia.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T06:57:59.769633-05:00",
+      "meaning": "Actividad, divergencia y correlación; referencia cero explícita."
+    },
+    {
+      "file": "grafana-modelos.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T06:58:01.141890-05:00",
+      "meaning": "Métricas del test histórico reservado y evaluación en vivo por dimensión."
+    },
+    {
+      "file": "grafana-operacion.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T06:58:02.513753-05:00",
+      "meaning": "WebSocket, heartbeat, lag, duración de micro-lotes y costo ilustrativo."
+    },
+    {
+      "file": "grafana-estado.jpg",
+      "tool": "Grafana",
+      "title": "CryptoPulse · BTC y SOL - CryptoPulse - Dashboards - Grafana",
+      "captured_at_lima": "2026-10-30T07:01:26.315214-05:00",
+      "meaning": "Estado integral, siete pronósticos y continuidad por activo."
+    },
+    {
+      "file": "postgresql-consulta.jpg",
+      "tool": "PostgreSQL / Grafana Explore",
+      "title": "Explore - CryptoPulse PostgreSQL - Grafana",
+      "captured_at_lima": "2026-10-30T07:01:31.292051-05:00",
+      "meaning": "Consulta SELECT real de las siete series live mediante la fuente PostgreSQL de Grafana."
+    },
+    {
+      "file": "kafka-mensajes.jpg",
+      "tool": "Kafka UI",
+      "title": "Kafbat UI",
+      "captured_at_lima": "2026-10-30T07:01:33.325535-05:00",
+      "meaning": "Mensajes reales del topic BTCUSDT, con partición, offset y clave."
+    },
+    {
+      "file": "jupyter-spark.jpg",
+      "tool": "JupyterLab",
+      "title": "evidencia_fu… - JupyterLab",
+      "captured_at_lima": "2026-10-30T07:01:39.704627-05:00",
+      "meaning": "Notebook ejecutado con muestra real de 2.880 velas y consulta del producto actual."
+    },
+    {
+      "file": "spark-ui.jpg",
+      "tool": "Spark UI",
+      "title": "CryptoPulse-evidencia-S01-S12 - Spark Jobs",
+      "captured_at_lima": "2026-10-30T07:01:41.840366-05:00",
+      "meaning": "Trabajos ejecutados por la sesión Spark del notebook de evidencia."
+    },
+    {
+      "file": "docker-desktop.jpg",
+      "tool": "Docker Desktop",
+      "title": "Containers - Docker Desktop",
+      "captured_at_lima": "2026-10-30T07:02:19.132708-05:00",
+      "meaning": "Motor activo y los dos proyectos Compose en ejecución; grupos contraídos."
+    }
+  ],
+  "notice": "Capturas reales de servicios locales; los datos son del momento indicado. GitHub Pages no ejecuta el pipeline.",
+  "startup_context": {
+    "engine_initial_state": "Sin imágenes ni volúmenes anteriores en el motor disponible.",
+    "host_data_and_models_preserved": true,
+    "previous_checkpoints_archived": true,
+    "batch_summary_rows_published": 3468,
+    "model_metric_rows_published": 12,
+    "notebook_spark_ui": "Sesión auxiliar de evidencia; no es el driver de Structured Streaming.",
+    "today_tests": [
+      "Kafka S06",
+      "Integración Kafka/Spark/modelos",
+      "Verificación S12"
+    ],
+    "historical_tests_not_repeated_today": [
+      "40 regresiones",
+      "5 pruebas Spark de regresión",
+      "Interrupción de 75 segundos"
+    ]
+  }
+}
